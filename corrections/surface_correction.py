@@ -62,19 +62,22 @@ def correction(energy_dict, lattice_dict, valence_dict=None):
 
     lda_uc_e0 = energy_dict['LDA']
     lda_struct = lattice_dict['LDA']
-    lda_uc_struct = SymmetryAnalyzer(lda_struct).get_conventional_standard_structure()
+    lda_uc_struct = SymmetryAnalyzer(
+            lda_struct).get_conventional_standard_structure()
     lda_volume = lda_uc_struct.volume/lda_uc_struct.num_sites
     lda_surfarea = lda_volume**(2.0/3)
 
     pbe_uc_e0 = energy_dict['PBE']
     pbe_struct = lattice_dict['PBE']
-    pbe_uc_struct = SymmetryAnalyzer(pbe_struct).get_conventional_standard_structure()
+    pbe_uc_struct = SymmetryAnalyzer(
+            pbe_struct).get_conventional_standard_structure()
     pbe_volume = pbe_uc_struct.volume/pbe_uc_struct.num_sites
     pbe_surfarea = pbe_volume**(2.0/3)
 
     pw91_uc_e0 = energy_dict['PW91']
     pw91_struct = lattice_dict['PW91']
-    pw91_uc_struct = SymmetryAnalyzer(pw91_struct).get_conventional_standard_structure()
+    pw91_uc_struct = SymmetryAnalyzer(
+            pw91_struct).get_conventional_standard_structure()
     pw91_volume = pw91_uc_struct.volume/pw91_uc_struct.num_sites
     pw91_surfarea = pw91_volume**(2.0/3)
 
@@ -86,7 +89,7 @@ def correction(energy_dict, lattice_dict, valence_dict=None):
         try:
             mpvis = MPGGAVaspINputSet()
         except:
-            raise ValueError('POTCAR files not found. Supply valence of element')
+            raise ValueError('POTCAR not found. Supply valence of element')
         potcar = mpvis.get_potcar(pbe_uc_struct)
         pbe_valence = potcar[0].zval
         potcar_dict = potcar.to_dict
@@ -102,7 +105,9 @@ def correction(energy_dict, lattice_dict, valence_dict=None):
     pw91_xc_cor = correction(1, pw91_valence, pw91_volume, 'PW91')
 
 
-    x = [lda_xc_cor*lda_surfarea, pbe_xc_cor*pbe_surfarea, pw91_xc_cor*pw91_surfarea]
+    x = [lda_xc_cor*lda_surfarea, 
+         pbe_xc_cor*pbe_surfarea, 
+         pw91_xc_cor*pw91_surfarea]
     A = array([x, ones(3)])
     y = [lda_uc_e0, pbe_uc_e0, pw91_uc_e0]
 
